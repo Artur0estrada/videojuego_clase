@@ -9,6 +9,7 @@
 [ext_resource type="PackedScene" uid="uid://dtrbka1ef726o" path="res://scenes/killzone.tscn" id="5_x8euu"]
 [ext_resource type="PackedScene" uid="uid://d2w2i5h0lhc6l" path="res://scenes/slime.tscn" id="6_l0s6b"]
 
+
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_ashvg"]
 texture = ExtResource("2_r1crl")
 0:0/0 = 0
@@ -293,6 +294,9 @@ position = Vector2(32, 9)
 
 [node name="Platform2" parent="Platforms" instance=ExtResource("3_cmfc3")]
 position = Vector2(370, 52)
+
+[node name="SistemaVidas" parent="."] instance = ExtResource("1_rbmkf")
+position = Vector2(10, 10)
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Platforms/Platform2"]
 libraries = {
