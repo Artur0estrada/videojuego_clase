@@ -6,7 +6,6 @@ pygame.mixer.init()
 pygame.mixer.music.load('assets/BackgroundMusic.mp3')  
 pygame.mixer.music.play(-1) 
 
-
 WIDTH, HEIGHT = 1024, 768
 PLAYER_SPEED = 4
 ENEMY_SPEED = 2
@@ -22,7 +21,6 @@ heart_img = pygame.image.load('assets/heart.png')
 grass_img = pygame.image.load('assets/grass.png')
 wall_img = pygame.image.load('assets/wall.png')
 
-
 player_img = pygame.transform.scale(player_img, (TILE_SIZE, TILE_SIZE))
 enemy_img = pygame.transform.scale(enemy_img, (TILE_SIZE, TILE_SIZE))
 heart_img = pygame.transform.scale(heart_img, (20, 20))
@@ -33,8 +31,8 @@ player = pygame.Rect(WIDTH // 2, HEIGHT // 2, TILE_SIZE, TILE_SIZE)
 
 enemies = [pygame.Rect(random.randint(0, WIDTH - TILE_SIZE), random.randint(0, HEIGHT - TILE_SIZE), TILE_SIZE, TILE_SIZE) for _ in range(2)]
 
+score = 0
 hearts = LIVES
-
 
 map_width = WIDTH // TILE_SIZE
 map_height = HEIGHT // TILE_SIZE
@@ -43,7 +41,6 @@ tilemap = []
 for _ in range(map_height):
     row = ['grass'] * map_width
     tilemap.append(row)
-
 
 for y in range(3, map_height - 3):
     tilemap[y][5] = 'wall'
@@ -86,18 +83,20 @@ def move_enemy(enemy):
                 enemy.y = new_y
 
 def check_collision():
-    global hearts
-    for enemy in enemies:
+    global hearts, score
+    for enemy in enemies[:]:
         if player.colliderect(enemy):
             hearts -= 1
-            print(f"Collision detected! Lives left: {hearts}")
+            score += 10  
+            print(f"COLISION! vidas restantes: {hearts}, Score: {score}")
             if hearts <= 0:
                 print("Game Over!")
-                pygame.quit()
-                exit()
+                show_game_over()
+                return
             
             enemy.x = random.randint(0, WIDTH - TILE_SIZE)
             enemy.y = random.randint(0, HEIGHT - TILE_SIZE)
+            enemies.remove(enemy)
 
 def can_move_to(x, y):
     if x < 0 or x + TILE_SIZE > WIDTH or y < 0 or y + TILE_SIZE > HEIGHT:
@@ -111,6 +110,37 @@ def can_move_to(x, y):
             return False
         return True
     return False
+
+def show_game_over():
+    font = pygame.font.Font(None, 74)
+    text = font.render("GAME OVER", True, (255, 0, 0))
+    screen.blit(text, (WIDTH // 2 - text.get_width() // 2, HEIGHT // 2 - 100))
+    
+    font = pygame.font.Font(None, 36)
+    text = font.render(f"Score: {score}", True, (255, 255, 255))
+    screen.blit(text, (WIDTH // 2 - text.get_width() // 2, HEIGHT // 2))
+    
+    pygame.display.update()
+    pygame.time.wait(3000)
+    pygame.quit()
+    exit()
+
+def show_credits():
+    font = pygame.font.Font(None, 74)
+    text = font.render("CREDITOS", True, (255, 255, 0))
+    screen.blit(text, (WIDTH // 2 - text.get_width() // 2, HEIGHT // 2 - 100))
+    
+    font = pygame.font.Font(None, 36)
+    text = font.render("Desarrollado by Luis Arturo", True, (255, 255, 255))
+    screen.blit(text, (WIDTH // 2 - text.get_width() // 2, HEIGHT // 2))
+    
+    text = font.render("Para la materia de videojuegos", True, (255, 255, 255))
+    screen.blit(text, (WIDTH // 2 - text.get_width() // 2, HEIGHT // 2 + 50))
+    
+    pygame.display.update()
+    pygame.time.wait(5000)
+    pygame.quit()
+    exit()
 
 running = True
 while running:
@@ -147,6 +177,13 @@ while running:
 
     for i in range(hearts):
         screen.blit(heart_img, (10 + i * 30, 10))
+
+    font = pygame.font.Font(None, 36)
+    text = font.render(f"Score: {score}", True, (0, 0, 0))
+    screen.blit(text, (WIDTH - 150, 10))
+
+    if len(enemies) == 0:
+        show_credits()
 
     pygame.display.update()
 
