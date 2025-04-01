@@ -2,6 +2,10 @@ import pygame
 import random
 
 pygame.init()
+pygame.mixer.init()
+pygame.mixer.music.load('assets/BackgroundMusic.mp3')  
+pygame.mixer.music.play(-1) 
+
 
 WIDTH, HEIGHT = 1024, 768
 PLAYER_SPEED = 4
@@ -43,9 +47,8 @@ for _ in range(map_height):
 
 for y in range(3, map_height - 3):
     tilemap[y][5] = 'wall'
-    tilemap[y][15] = 'wall'
+    tilemap[y][1] = 'wall'
     
-# Horizontal walls
 for x in range(3, map_width - 3):
     tilemap[3][x] = 'wall'
     tilemap[map_height - 4][x] = 'wall'
