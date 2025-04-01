@@ -31,16 +31,31 @@ enemies = [pygame.Rect(random.randint(0, WIDTH - TILE_SIZE), random.randint(0, H
 
 hearts = LIVES
 
-tilemap = [
-    ['grass', 'grass', 'grass', 'grass', 'wall', 'wall', 'grass', 'grass'],
-    ['grass', 'wall', 'wall', 'grass', 'wall', 'wall', 'grass', 'grass'],
-    ['grass', 'grass', 'grass', 'grass', 'wall', 'grass', 'grass', 'grass'],
-    ['grass', 'wall', 'wall', 'grass', 'wall', 'wall', 'wall', 'grass'],
-    ['grass', 'grass', 'grass', 'grass', 'wall', 'grass', 'grass', 'grass'],
-]
+
+map_width = WIDTH // TILE_SIZE
+map_height = HEIGHT // TILE_SIZE
+
+tilemap = []
+for _ in range(map_height):
+    row = ['grass'] * map_width
+    tilemap.append(row)
+
+
+for y in range(3, map_height - 3):
+    tilemap[y][5] = 'wall'
+    tilemap[y][15] = 'wall'
+    
+# Horizontal walls
+for x in range(3, map_width - 3):
+    tilemap[3][x] = 'wall'
+    tilemap[map_height - 4][x] = 'wall'
+    
+for _ in range(1):
+    x = random.randint(2, map_width - 3)
+    y = random.randint(2, map_height - 3)
+    tilemap[y][x] = 'wall'
 
 def draw_tilemap():
-    """Draw the tilemap using the tile images."""
     for row in range(len(tilemap)):
         for col in range(len(tilemap[row])):
             tile_type = tilemap[row][col]
@@ -54,9 +69,18 @@ def draw_tilemap():
 def move_enemy(enemy):
     directions = [(ENEMY_SPEED, 0), (-ENEMY_SPEED, 0), (0, ENEMY_SPEED), (0, -ENEMY_SPEED)]
     dx, dy = random.choice(directions)
-    enemy.x += dx
-    enemy.y += dy
-    enemy.clamp_ip(screen.get_rect())  
+    
+    new_x = enemy.x + dx
+    new_y = enemy.y + dy
+    
+    if 0 <= new_x < WIDTH - TILE_SIZE and 0 <= new_y < HEIGHT - TILE_SIZE:
+        tile_x = new_x // TILE_SIZE
+        tile_y = new_y // TILE_SIZE
+        
+        if 0 <= tile_x < len(tilemap[0]) and 0 <= tile_y < len(tilemap):
+            if tilemap[tile_y][tile_x] != 'wall':
+                enemy.x = new_x
+                enemy.y = new_y
 
 def check_collision():
     global hearts
@@ -68,14 +92,22 @@ def check_collision():
                 print("Game Over!")
                 pygame.quit()
                 exit()
+            
+            enemy.x = random.randint(0, WIDTH - TILE_SIZE)
+            enemy.y = random.randint(0, HEIGHT - TILE_SIZE)
 
 def can_move_to(x, y):
+    if x < 0 or x + TILE_SIZE > WIDTH or y < 0 or y + TILE_SIZE > HEIGHT:
+        return False
+        
     tile_x = x // TILE_SIZE
     tile_y = y // TILE_SIZE
-
-    if tilemap[tile_y][tile_x] == 'wall':
-        return False  
-    return True
+    
+    if 0 <= tile_x < len(tilemap[0]) and 0 <= tile_y < len(tilemap):
+        if tilemap[tile_y][tile_x] == 'wall':
+            return False
+        return True
+    return False
 
 running = True
 while running:
