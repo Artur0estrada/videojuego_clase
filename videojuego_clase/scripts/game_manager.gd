@@ -1,9 +1,9 @@
 extends Node
 
-var score = 0
+var puntuacion = 0
 
-@onready var score_label = $ScoreLabel
+@onready var etiqueta_puntuacion = $ScoreLabel
 
-func add_point():
-	score += 1
-	score_label.text = "You collected " + str(score) + " coins."
+func añadir_punto():
+	puntuacion += 1
+	etiqueta_puntuacion.text = "Has recogido " + str(puntuacion) + " monedas."

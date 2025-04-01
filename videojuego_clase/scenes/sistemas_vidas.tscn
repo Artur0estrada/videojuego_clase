@@ -1,0 +1,27 @@
+[gd_scene load_steps=3 format=3 uid="uid://yoursceneuid"]
+
+[ext_resource type="Script" path="res://scripts/vida.gd" id="1_vida"]
+[ext_resource type="PackedScene" uid="uid://yourcorazonuid" path="res://scenes/corazon.tscn" id="2_corazon"]
+
+[node name="SistemaVidas" type="Node"]
+unique_name_in_owner = true
+script = ExtResource("1_vida")
+
+[node name="ContenedorCorazones" type="HBoxContainer" parent="."]
+offset_right = 160.0
+offset_bottom = 32.0
+
+[node name="Corazon1" parent="ContenedorCorazones" instance=ExtResource("2_corazon")]
+layout_mode = 2
+
+[node name="Corazon2" parent="ContenedorCorazones" instance=ExtResource("2_corazon")]
+layout_mode = 2
+
+[node name="Corazon3" parent="ContenedorCorazones" instance=ExtResource("2_corazon")]
+layout_mode = 2
+
+[node name="Corazon4" parent="ContenedorCorazones" instance=ExtResource("2_corazon")]
+layout_mode = 2
+
+[node name="Corazon5" parent="ContenedorCorazones" instance=ExtResource("2_corazon")]
+layout_mode = 2

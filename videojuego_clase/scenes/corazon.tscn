@@ -1,0 +1,9 @@
+[gd_scene load_steps=2 format=3 uid="uid://yoursceneuid"]
+
+[ext_resource type="Texture2D" uid="uid://bkueby0uuoy4u" path="res://assets/sprites/heart.png" id="1_heart"]
+
+[node name="Corazon" type="TextureRect"]
+custom_minimum_size = Vector2(32, 32)
+texture = ExtResource("1_heart")
+expand_mode = 1
+stretch_mode = 5

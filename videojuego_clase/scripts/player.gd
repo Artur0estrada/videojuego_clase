@@ -1,45 +1,43 @@
 extends CharacterBody2D
 
-
-const SPEED = 130.0
-const JUMP_VELOCITY = -300.0
+const VELOCIDAD = 130.0
+const VELOCIDAD_SALTO = -300.0
 
 # Get the gravity from the project settings to be synced with RigidBody nodes.
-var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
+var gravedad = ProjectSettings.get_setting("physics/2d/default_gravity")
+var posicion_inicial = Vector2.ZERO
 
-@onready var animated_sprite = $AnimatedSprite2D
+@onready var sprite_animado = $AnimatedSprite2D
+
+func _ready():
+	posicion_inicial = global_position
+	add_to_group("jugador")
 
 func _physics_process(delta):
-	# Add the gravity.
 	if not is_on_floor():
-		velocity.y += gravity * delta
+		velocity.y += gravedad * delta
 
-	# Handle jump.
 	if Input.is_action_just_pressed("jump") and is_on_floor():
-		velocity.y = JUMP_VELOCITY
+		velocity.y = VELOCIDAD_SALTO
 
-	# Get the input direction: -1, 0, 1
-	var direction = Input.get_axis("move_left", "move_right")
+	var direccion = Input.get_axis("move_left", "move_right")
 	
-	# Flip the Sprite
-	if direction > 0:
-		animated_sprite.flip_h = false
-	elif direction < 0:
-		animated_sprite.flip_h = true
+	if direccion > 0:
+		sprite_animado.flip_h = false
+	elif direccion < 0:
+		sprite_animado.flip_h = true
 	
-	# Play animations
 	if is_on_floor():
-		if direction == 0:
-			animated_sprite.play("idle")
+		if direccion == 0:
+			sprite_animado.play("idle")
 		else:
-			animated_sprite.play("run")
+			sprite_animado.play("run")
 	else:
-		animated_sprite.play("jump")
+		sprite_animado.play("jump")
 	
-	# Apply movement
-	if direction:
-		velocity.x = direction * SPEED
+	if direccion:
+		velocity.x = direccion * VELOCIDAD
 	else:
-		velocity.x = move_toward(velocity.x, 0, SPEED)
+		velocity.x = move_toward(velocity.x, 0, VELOCIDAD)
 
 	move_and_slide()
